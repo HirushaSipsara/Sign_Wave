@@ -28,11 +28,11 @@
         const audioFiles = {
             "Mistake": "./mp3/Flat.mp3",
             "Name": "./mp3/UpsideDown.mp3",
-            "Please": "./mp3/Neutral.mp3"
+            "Please": "./mp3/Neutral.mp3",
         };
 
         let lastDirection = '';  // To store the last direction
-        const socket = new WebSocket('ws://192.168.1.113/ws'); // Replace with your ESP's IP
+        const socket = new WebSocket('ws://192.168.1.110/ws'); // Replace with your ESP's IP
 
         socket.onopen = function(event) {
             console.log('Connected to WebSocket server.');
@@ -129,7 +129,7 @@
             <a href="/" class="d-flex align-items-center my-2 my-lg-0 me-lg-auto text-white text-decoration-none">
                 <pre></pre> 
                 <p style="
-                    background: linear-gradient(135deg, #19b2bd, #4224b1); 
+                    background: linear-gradient(135deg, #0cafbb, #4224b1); 
                     -webkit-background-clip: text;
                     -webkit-text-fill-color: transparent;
                     font-weight: bold; 
@@ -176,15 +176,167 @@
 
     <br><br><br>
     <div class="container text-center">
-      
-    <h2>Select Mode</h2>
-    <button class="btn btn-secondary btn-mode" onclick="selectMode(1)">Tilt Mode</button>
-    <button class="btn btn-primary btn-mode" onclick="selectMode(2)">Gesture Mode</button>
+
+    <h2 class="cool-heading-blue">Modes</h2>
+
+      <style>
+      .cool-heading-blue {
+          font-family: 'Poppins', sans-serif; /* Modern font */
+          font-size: 30px;
+          background: linear-gradient(90deg, #7f39db, #3a7bd5); /* Blue gradient */
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          font-weight: 800;
+          text-transform: uppercase;
+          letter-spacing: 4px;
+          padding-right: 10px; /* Adding extra space at the end */
+          position: relative;
+          display: inline-block;
+          animation: glowing-blue 1.5s infinite alternate;
+      }
+  
+      /* Blue glowing effect */
+      @keyframes glowing-blue {
+          0% {
+              text-shadow: 4px 4px 10px rgba(63, 39, 196, 0.5), 4px 4px 20px rgba(58, 123, 213, 0.5);
+          }
+          100% {
+              text-shadow: 4px 4px 20px rgba(112, 20, 148, 0.9), 4px 4px 30px rgba(58, 123, 213, 0.9);
+          }
+      }
+      </style>
+      <br>
+    <button class="newbtn" onclick="selectMode(1)" style="
+      --border-color: linear-gradient(-45deg, #ffae00, #7e03aa, #00fffb);
+      --border-width: 0.125em;
+      --curve-size: 0.5em;
+      --blur: 30px;
+      --bg: #080312;
+      --color: #afffff;
+      color: var(--color);
+      cursor: pointer;
+      position: relative;
+      isolation: isolate;
+      display: inline-grid;
+      place-content: center;
+      padding: 0.5em 1.5em;
+      font-size: 17px;
+      border: 0;
+      text-transform: uppercase;
+      box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.6);
+      clip-path: polygon(0% var(--curve-size), var(--curve-size) 0, 100% 0, 100% calc(100% - var(--curve-size)), calc(100% - var(--curve-size)) 100%, 0 100%);
+      transition: color 250ms;
+    ">
+    Tilt Mode</button>
+
+    <button class="newbtn" onclick="selectMode(2)" style="
+      --border-color: linear-gradient(-45deg, #ffae00, #7e03aa, #00fffb);
+      --border-width: 0.125em;
+      --curve-size: 0.5em;
+      --blur: 30px;
+      --bg: #080312;
+      --color: #afffff;
+      color: var(--color);
+      cursor: pointer;
+      position: relative;
+      isolation: isolate;
+      display: inline-grid;
+      place-content: center;
+      padding: 0.5em 1.5em;
+      font-size: 17px;
+      border: 0;
+      text-transform: uppercase;
+      box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.6);
+      clip-path: polygon(0% var(--curve-size), var(--curve-size) 0, 100% 0, 100% calc(100% - var(--curve-size)), calc(100% - var(--curve-size)) 100%, 0 100%);
+      transition: color 250ms;
+    ">
+    Gesture Mode</button>
+
+    <button class="newbtn" onclick="selectMode(3)" style="
+      --border-color: linear-gradient(-45deg, #ffae00, #7e03aa, #00fffb);
+      --border-width: 0.125em;
+      --curve-size: 0.5em;
+      --blur: 30px;
+      --bg: #080312;
+      --color: #afffff;
+      color: var(--color);
+      cursor: pointer;
+      position: relative;
+      isolation: isolate;
+      display: inline-grid;
+      place-content: center;
+      padding: 0.5em 1.5em;
+      font-size: 17px;
+      border: 0;
+      text-transform: uppercase;
+      box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.6);
+      clip-path: polygon(0% var(--curve-size), var(--curve-size) 0, 100% 0, 100% calc(100% - var(--curve-size)), calc(100% - var(--curve-size)) 100%, 0 100%);
+      transition: color 250ms;
+    ">
+      Button 1
+    </button>
+
+    <style>
+    @keyframes move-bg7234 {
+      0% { background-position: 31% 0%; }
+      50% { background-position: 70% 100%; }
+      100% { background-position: 31% 0%; }
+    }
+    .newbtn::after, .newbtn::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+    }
+    .newbtn::before {
+      background: var(--border-color);
+      background-size: 300% 300%;
+      animation: move-bg7234 5s ease infinite;
+      z-index: -2;
+    }
+    .newbtn::after {
+      background: var(--bg);
+      z-index: -1;
+      clip-path: polygon(
+        var(--border-width) calc(var(--curve-size) + var(--border-width) * 0.5),
+        calc(var(--curve-size) + var(--border-width) * 0.5) var(--border-width),
+        calc(100% - var(--border-width)) var(--border-width),
+        calc(100% - var(--border-width)) calc(100% - calc(var(--curve-size) + var(--border-width) * 0.5)),
+        calc(100% - calc(var(--curve-size) + var(--border-width) * 0.5)) calc(100% - var(--border-width)),
+        var(--border-width) calc(100% - var(--border-width))
+      );
+      transition: clip-path 500ms;
+    }
+    .newbtn:where(:hover, :focus)::after {
+      clip-path: polygon(
+        calc(100% - var(--border-width)) calc(100% - calc(var(--curve-size) + var(--border-width) * 0.5)),
+        calc(100% - var(--border-width)) var(--border-width),
+        calc(100% - var(--border-width)) var(--border-width),
+        calc(100% - var(--border-width)) calc(100% - calc(var(--curve-size) + var(--border-width) * 0.5)),
+        calc(100% - calc(var(--curve-size) + var(--border-width) * 0.5)) calc(100% - var(--border-width)),
+        calc(100% - calc(var(--curve-size) + var(--border-width) * 0.5)) calc(100% - var(--border-width))
+      );
+      transition: 200ms;
+    }
+    .newbtn:where(:hover, :focus) {
+      color: #fff;
+    }
+    </style>
 
     <h1>One Hand Sign Gestures</h1>
     <p class="direction" id="direction-display">Neutral</p>
 
-    <button class="btn btn-primary" onclick="simulateDirectionChange()">Simulate Direction Change</button>
+    <div style="display: flex; justify-content: center;">
+      <button onclick="simulateDirectionChange()" style="border: none; width: 10em; height: 3em; border-radius: 2em; display: flex; justify-content: center; align-items: center; gap: 8px; background: #1C1A1C; cursor: pointer; transition: all 450ms ease-in-out;" 
+              onmouseover="this.style.background='linear-gradient(0deg,#A47CF3,#683FEA)'; this.style.boxShadow='inset 0px 1px 0px 0px rgba(255, 255, 255, 0.4), inset 0px -4px 0px 0px rgba(0, 0, 0, 0.2), 0px 0px 0px 4px rgba(255, 255, 255, 0.2), 0px 0px 180px 0px #9917FF'; this.style.transform='translateY(-2px)'; this.querySelector('.text').style.color='white'; this.querySelector('.sparkle').style.fill='white'; this.querySelector('.sparkle').style.transform='scale(1.2)';" 
+              onmouseout="this.style.background='#1C1A1C'; this.style.boxShadow='none'; this.style.transform='translateY(0)'; this.querySelector('.text').style.color='#AAAAAA'; this.querySelector('.sparkle').style.fill='#AAAAAA'; this.querySelector('.sparkle').style.transform='scale(1)';">
+  
+          <svg height="20" width="20" fill="#FFFFFF" viewBox="0 0 24 24" data-name="Layer 1" id="Layer_1" class="sparkle" style="fill: #AAAAAA; transition: all 800ms ease;">
+              <path d="M10,21.236,6.755,14.745.264,11.5,6.755,8.255,10,1.764l3.245,6.491L19.736,11.5l-6.491,3.245ZM18,21l1.5,3L21,21l3-1.5L21,18l-1.5-3L18,18l-3,1.5ZM19.333,4.667,20.5,7l1.167-2.333L24,3.5,21.667,2.333,20.5,0,19.333,2.333,17,3.5Z"></path>
+          </svg>
+  
+          <span class="text" style="font-weight: 600; color: #AAAAAA; font-size: small;">Simulate</span>
+      </button>
+    </div>
 
     </div>
     <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>

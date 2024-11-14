@@ -1,0 +1,61 @@
+/* From Uiverse.io by javierBarroso */ 
+.button {
+    background-color: #fff;
+    border: 1px solid #0077b5;
+    padding: 10px;
+    position: relative;
+    width: fit-content;
+    transition: 0.5s;
+    font-size: 17px;
+    border-radius: 0.4em;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    cursor: pointer;
+  }
+  
+  .button .text {
+    position: relative;
+    margin: 0;
+    padding: 0;
+    transition: 0.5s;
+    color: #0077b5;
+    white-space: nowrap;
+    pointer-events: none;
+  }
+  
+  .button .svg {
+    pointer-events: none;
+    position: absolute;
+    transform-origin: 50% 50%;
+    transform: translateY(-50%) translateX(100px);
+    top: 50%;
+    right: 10px;
+    margin: 0;
+    padding: 0;
+    opacity: 0;
+    transition-duration: 0.5s;
+    transition-delay: 0;
+    height: 20px;
+    width: 20px;
+    fill: #fff;
+  }
+  
+  .button:hover .text {
+    color: #fff;
+  }
+  
+  .button:hover .svg {
+    opacity: 1;
+    transition-delay: 0.3s;
+    transition-duration: 0.3s;
+    transform: translateY(-50%) translateX(0px);
+  }
+  
+  .button:hover {
+    background-color: #0077b5;
+    padding-right: 40px;
+  }
+  
