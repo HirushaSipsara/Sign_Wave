@@ -1,4 +1,4 @@
-//The gyro readings I put are rough guessings by considering moving direction.Also I still didnt include accelerometer so not a complete code.
+  q//The gyro readings I put are rough guessings by considering moving direction.Also I still didnt include accelerometer so not a complete code.
 
 #include <Wire.h>
 #include <Adafruit_MPU6050.h>
