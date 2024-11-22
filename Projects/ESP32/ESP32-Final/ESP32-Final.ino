@@ -524,11 +524,11 @@ void loop()
         flexValue5 = analogRead(flexPin5);
 
         // Determine finger states based on thresholds
-        fingerState1 = (flexValue1 > threshold1) ? 1 : 0;
-        fingerState2 = (flexValue2 > threshold2) ? 1 : 0;
-        fingerState3 = (flexValue3 > threshold3) ? 1 : 0;
-        fingerState4 = (flexValue4 > threshold4) ? 1 : 0;
-        fingerState5 = (flexValue5 > threshold5) ? 1 : 0;
+        fingerState1 = (flexValue1 > threshold) ? 1 : 0;
+        fingerState2 = (flexValue2 > threshold) ? 1 : 0;
+        fingerState3 = (flexValue3 > threshold) ? 1 : 0;
+        fingerState4 = (flexValue4 > threshold) ? 1 : 0;
+        fingerState5 = (flexValue5 > threshold) ? 1 : 0;
 
         if (detectBye(calibratedGyroX, calibratedGyroY, calibratedGyroZ, calibratedAccelX, calibratedAccelY, calibratedAccelZ,
                       fingerState1, fingerState2, fingerState3, fingerState4, fingerState5)))
