@@ -26,9 +26,18 @@
     </style>
     <script>
         const audioFiles = {
-            "Mistake": "./mp3/Flat.mp3",
-            "Name": "./mp3/UpsideDown.mp3",
-            "Please": "./mp3/Neutral.mp3",
+            "Good bye": "./mp3/Gestures/Good bye.mp3",
+            "Hello": "./mp3/Gestures/Hello.mp3",
+            "I am": "./mp3/Gestures/I am.mp3",
+            "I": "./mp3/Gestures/I.mp3",
+            "Need": "./mp3/Gestures/Need.mp3",
+            "No": "./mp3/Gestures/No.mp3",
+            "Please": "./mp3/Gestures/Please.mp3",
+            "Sorry": "./mp3/Gestures/Sorry.mp3",
+            "Thank you": "./mp3/Gestures/Thank you.mp3",
+            "Thirsty": "./mp3/Gestures/Thirsty.mp3",
+            "Water": "./mp3/Gestures/Water.mp3",
+            "Yes": "./mp3/Gestures/Yes.mp3",
         };
 
         let lastDirection = '';  // To store the last direction
@@ -376,15 +385,15 @@
     </div>
     <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
     <script>
-         // Simulate direction change for testing
-         function simulateDirectionChange() {
-            const directions = ["Mistake", "Name", "Please"];
-            const randomDirection = directions[Math.floor(Math.random() * directions.length)];
-            if (randomDirection !== lastDirection) {
-                updateDirection(randomDirection);
-            }
-        }
-    </script>
+      // Simulate direction change for testing
+      function simulateDirectionChange() {
+         const directions = ["Good bye","Hello","I am","I","Need","No","Please","Sorry","Thank you","Thirsty","Water","Yes"];
+         const randomDirection = directions[Math.floor(Math.random() * directions.length)];
+         if (randomDirection !== lastDirection) {
+             updateDirection(randomDirection);
+         }
+     }
+  </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
