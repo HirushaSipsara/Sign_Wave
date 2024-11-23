@@ -531,7 +531,7 @@ void loop()
         fingerState5 = (flexValue5 > threshold) ? 1 : 0;
 
         if (detectBye(calibratedGyroX, calibratedGyroY, calibratedGyroZ, calibratedAccelX, calibratedAccelY, calibratedAccelZ,
-                      fingerState1, fingerState2, fingerState3, fingerState4, fingerState5)))
+                      fingerState1, fingerState2, fingerState3, fingerState4, fingerState5))
             {
                 display.println("Good Bye !!!");
                 dataToSend = "Good Bye";
