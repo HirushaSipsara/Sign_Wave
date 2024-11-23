@@ -32,10 +32,7 @@
             "Tilt Backward": "./mp3/TiltBackward.mp3",
             "Flat": "./mp3/Flat.mp3",
             "Upside Down": "./mp3/UpsideDown.mp3",
-            "Neutral": "",
-            "Mistake": "./mp3/Flat.mp3",
-            "Name": "./mp3/UpsideDown.mp3",
-            "Please": "./mp3/Neutral.mp3"
+            "Neutral": "./mp3/Neutral.mp3",
         };
 
         let lastDirection = '';  // To store the last direction
@@ -77,36 +74,14 @@
 
         // Send selected mode to ESP via WebSocket
         function selectMode(mode) {
-          if (socket && socket.readyState === WebSocket.OPEN) {
             socket.send(mode);
-            console.log(`Mode ${mode} sent to ESP`);
-
-            // Navigation logic based on mode
-            const currentPath = window.location.pathname;
-
-            // Navigation logic based on mode
-            if (mode == 1 && currentPath !== '/speech.html') {
-              window.location.href = './speech.html';
-            } else if (mode == 2 && currentPath !== '/speech2.html') {
-              socket.send(0);
-              window.location.href = './speech2.html';
-            } else if (mode == 0) {
-              console.log("Checkbox is unchecked! Mode 0 sent.");
-            } else {
-              window.location.href = './index.html';
+            if(mode==1){
+                window.location.href = './speech.html';
+            }else if(mode==2){
+                window.location.href = './speech2.html';
+            }else{
+                window.location.href = './index.html';
             }
-          } else {
-            console.error("WebSocket is not ready. Cannot send mode.");
-          }
-        }
-
-        function handleClick() {
-          const checkbox = document.getElementById("checkbox");
-          if (checkbox.checked) {
-            selectMode(1);
-          } else {
-            selectMode(0);
-          }
         }
     </script>
     <link rel="stylesheet" href="style.css">
@@ -175,7 +150,7 @@
   
             <ul class="nav col-12 col-lg-auto my-2 justify-content-center my-md-0 text-small">
                 <li>
-                    <a href="index.html" class="nav-link text-black-50">
+                    <a href="index.html" class="nav-link text-black">
                       <svg class="bi d-block mx-auto mb-1" width="24" height="24"><use xlink:href="#people-circle"/></svg>
                       About
                     </a>
@@ -187,7 +162,7 @@
                     </a>
                   </li>
                   <li>
-                    <a href="speech.html" class="nav-link text-black">
+                    <a href="speech.html" class="nav-link text-black-50">
                       <svg class="bi d-block mx-auto mb-1" width="24" height="24"><use xlink:href="#speedometer2"/></svg>
                       Speech
                     </a>
@@ -207,17 +182,7 @@
     <br><br><br>
     <div class="container text-center">
 
-    <div class="container_switch">
-      <input id="checkbox" type="checkbox" onclick="handleClick()"/>
-      <label class="switch" for="checkbox">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="slider">
-          <path
-            d="M288 32c0-17.7-14.3-32-32-32s-32 14.3-32 32V256c0 17.7 14.3 32 32 32s32-14.3 32-32V32zM143.5 120.6c13.6-11.3 15.4-31.5 4.1-45.1s-31.5-15.4-45.1-4.1C49.7 115.4 16 181.8 16 256c0 132.5 107.5 240 240 240s240-107.5 240-240c0-74.2-33.8-140.6-86.6-184.6c-13.6-11.3-33.8-9.4-45.1 4.1s-9.4 33.8 4.1 45.1c38.9 32.3 63.5 81 63.5 135.4c0 97.2-78.8 176-176 176s-176-78.8-176-176c0-54.4 24.7-103.1 63.5-135.4z"
-          ></path>
-        </svg>
-      </label>
-    </div>
-    <h2 class="cool-heading-blue">Modes</h2><br>
+    <h2 class="cool-heading-blue">Modes</h2>
 
     <style>
     .cool-heading-blue {
@@ -292,7 +257,7 @@
     ">
     Gesture Mode</button>
 
-    <button class="newbtn" onclick="selectMode(4)" style="
+    <button class="newbtn" onclick="selectMode(3)" style="
       --border-color: linear-gradient(-45deg, #ffae00, #7e03aa, #00fffb);
       --border-width: 0.125em;
       --curve-size: 0.5em;
@@ -388,7 +353,7 @@
     <script>
          // Simulate direction change for testing
          function simulateDirectionChange() {
-            const directions = ["Tilt Right", "Tilt Left", "Tilt Forward", "Tilt Backward", "Flat", "Upside Down", "Neutral", "Mistake", "Name", "Please"];
+            const directions = ["Tilt Right", "Tilt Left", "Tilt Forward", "Tilt Backward", "Flat", "Upside Down", "Neutral"];
             const randomDirection = directions[Math.floor(Math.random() * directions.length)];
             if (randomDirection !== lastDirection) {
                 updateDirection(randomDirection);
