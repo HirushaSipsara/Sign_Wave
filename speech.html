@@ -26,17 +26,21 @@
     </style>
     <script>
         const audioFiles = {
-            "Tilt Right": "./mp3/TiltRight.mp3",
-            "Tilt Left": "./mp3/TiltLeft.mp3",
-            "Tilt Forward": "./mp3/TiltForward.mp3",
-            "Tilt Backward": "./mp3/TiltBackward.mp3",
-            "Flat": "./mp3/Flat.mp3",
-            "Upside Down": "./mp3/UpsideDown.mp3",
-            "Neutral": "./mp3/Neutral.mp3",
+            "Fuck you": "./mp3/Fuck you.mp3",
+            "Can you help me": "./mp3/Can you help me.mp3",
+            "How much does this cost": "./mp3/How much does this cost.mp3",
+            "I am hungry": "./mp3/I am hungry.mp3",
+            "I am thirsty": "./mp3/I am thirsty.mp3",
+            "I am tired": "./mp3/I am tired.mp3",
+            "I do not understand": "./mp3/I do not understand.mp3",
+            "Nice to meet you": "./mp3/Nice to meet you.mp3",
+            "What is your name": "./mp3/What is your name.mp3",
+            "What time is it": "./mp3/What time is it.mp3",
+            "Where is the bathroom": "./mp3/Where is the bathroom.mp3",
         };
 
         let lastDirection = '';  // To store the last direction
-        const socket = new WebSocket('ws://192.168.1.110/ws'); // Replace with your ESP's IP
+        const socket = new WebSocket('ws://192.168.221.195/ws'); // Replace with your ESP's IP
 
         socket.onopen = function(event) {
             console.log('Connected to WebSocket server.');
@@ -89,8 +93,6 @@
               window.location.href = './speech2.html';
             } else if (mode == 0) {
               console.log("Checkbox is unchecked! Mode 0 sent.");
-            } else {
-              window.location.href = './index.html';
             }
           } else {
             console.error("WebSocket is not ready. Cannot send mode.");
@@ -385,7 +387,7 @@
     <script>
       // Simulate direction change for testing
       function simulateDirectionChange() {
-         const directions = ["Tilt Right", "Tilt Left", "Tilt Forward", "Tilt Backward", "Flat", "Upside Down", "Neutral"];
+         const directions = ["Where is the bathroom", "What time is it", "What is your name", "Nice to meet you", "I do not understand", "I am tired", "I am thirsty", "I am hungry", "How much does this cost", "Can you help me", "Fuck you"];
          const randomDirection = directions[Math.floor(Math.random() * directions.length)];
          if (randomDirection !== lastDirection) {
              updateDirection(randomDirection);

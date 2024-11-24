@@ -29,7 +29,7 @@
         const audioFiles = {
             "Good bye": "./mp3/Gestures/Good bye.mp3",
             "Hello": "./mp3/Gestures/Hello.mp3",
-            "I am": "./mp3/Gestures/I am.mp3",
+            "I am": "./mp3/Fuck you.mp3",
             "I": "./mp3/Gestures/I.mp3",
             "Need": "./mp3/Gestures/Need.mp3",
             "No": "./mp3/Gestures/No.mp3",
@@ -39,10 +39,11 @@
             "Thirsty": "./mp3/Gestures/Thirsty.mp3",
             "Water": "./mp3/Gestures/Water.mp3",
             "Yes": "./mp3/Gestures/Yes.mp3",
+            "Fuck you": "./mp3/Fuck you.mp3",
         };
 
         let lastDirection = '';  // To store the last direction
-        const socket = new WebSocket('ws://192.168.1.110/ws'); // Replace with your ESP's IP
+        const socket = new WebSocket('ws://192.168.221.195/ws'); // Replace with your ESP's IP
 
         socket.onopen = function(event) {
             console.log('Connected to WebSocket server.');
@@ -97,8 +98,6 @@
               console.log("Checkbox is checked! Mode 3 sent.");
             } else if (mode == 0) {
               console.log("Checkbox is unchecked! Mode 0 sent.");
-            } else {
-              window.location.href = './index.html';
             }
           } else {
             console.error("WebSocket is not ready. Cannot send mode.");
@@ -388,7 +387,7 @@
     <script>
       // Simulate direction change for testing
       function simulateDirectionChange() {
-         const directions = ["Good bye","Hello","I am","I","Need","No","Please","Sorry","Thank you","Thirsty","Water","Yes"];
+         const directions = ["Good bye","Hello","I am","I","Need","No","Please","Sorry","Thank you","Thirsty","Water","Yes","Fuck you"];
          const randomDirection = directions[Math.floor(Math.random() * directions.length)];
          if (randomDirection !== lastDirection) {
              updateDirection(randomDirection);

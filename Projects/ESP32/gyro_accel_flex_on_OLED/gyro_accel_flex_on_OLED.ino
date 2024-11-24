@@ -9,23 +9,24 @@
 #define SCREEN_HEIGHT 64
 #define OLED_RST_PIN 16 // Use GPIO 16 for the OLED reset pin
 #define SCREEN_I2C_ADDR 0x3C
+#define thrshold 3800
 
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RST_PIN);
 Adafruit_MPU6050 mpu;
 
 // Flex sensor pins
-const int flexPin1 = 32;
-const int flexPin2 = 33;
+const int flexPin1 = 36;
+const int flexPin2 = 39;
 const int flexPin3 = 34;
 const int flexPin4 = 35;
-const int flexPin5 = 36;
+const int flexPin5 = 32;
 
 // Variables to store flex sensor values
 int flexValue1 = 0, flexValue2 = 0, flexValue3 = 0, flexValue4 = 0, flexValue5 = 0;
 int fingerState1 = 0, fingerState2 = 0, fingerState3 = 0, fingerState4 = 0, fingerState5 = 0;
 
 // Threshold values for finger states
-const int threshold1 = 2000, threshold2 = 2000, threshold3 = 1500, threshold4 = 1500, threshold5 = 4000;
+
 
 // Offset variables for calibration
 float gyroXOffset = 0, gyroYOffset = 0, gyroZOffset = 0;
@@ -260,11 +261,11 @@ void loop() {
   flexValue5 = analogRead(flexPin5);
 
   // Determine finger states based on thresholds
-  fingerState1 = (flexValue1 > threshold1) ? 1 : 0;
-  fingerState2 = (flexValue2 > threshold2) ? 1 : 0;
-  fingerState3 = (flexValue3 > threshold3) ? 1 : 0;
-  fingerState4 = (flexValue4 > threshold4) ? 1 : 0;
-  fingerState5 = (flexValue5 > threshold5) ? 1 : 0;
+  fingerState1 = (flexValue1 < thrshold) ? 1 : 0;
+  fingerState2 = (flexValue2 < thrshold) ? 1 : 0;
+  fingerState3 = (flexValue3 < thrshold) ? 1 : 0;
+  fingerState4 = (flexValue4 < thrshold) ? 1 : 0;
+  fingerState5 = (flexValue5 < thrshold) ? 1 : 0;
 
   // Gesture detection
   String message = "";
@@ -321,11 +322,11 @@ void loop() {
   Serial.print(" | Accel Y: "); Serial.print(calibratedAccelY);
   Serial.print(" | Accel Z: "); Serial.print(calibratedAccelZ);
   Serial.print(" | Temp: "); Serial.println(temperature);
-  Serial.print("Finger 1: "); Serial.print(fingerState1);
-  Serial.print(" | Finger 2: "); Serial.print(fingerState2);
-  Serial.print(" | Finger 3: "); Serial.print(fingerState3);
-  Serial.print(" | Finger 4: "); Serial.print(fingerState4);
-  Serial.print(" | Finger 5: "); Serial.println(fingerState5);
+  Serial.print("Finger 1: "); Serial.print(flexValue1);
+  Serial.print(" | Finger 2: "); Serial.print(flexValue2);
+  Serial.print(" | Finger 3: "); Serial.print(flexValue3);
+  Serial.print(" | Finger 4: "); Serial.print(flexValue4);
+  Serial.print(" | Finger 5: "); Serial.println(flexValue5);
   
   if (message.length() > 0) {
     Serial.println(message);

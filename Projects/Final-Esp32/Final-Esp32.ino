@@ -314,9 +314,11 @@ void loop()
     sensors_event_t a, g, temp;
     mpu.getEvent(&a, &g, &temp);
 
-    if(currentMode == 0){
-        Serial.print("ESP32 Off");
-    }else if (currentMode == 1)
+    if(currentMode == 0)
+    {
+        Serial.print("ESP32 Off\n");
+    }
+    else if (currentMode == 1)
     {
         sensors_event_t a, g, temp;
         mpu.getEvent(&a, &g, &temp);
@@ -386,12 +388,6 @@ void loop()
         if (dataToSend != "") {
           notifyClients(dataToSend);
         }
-        display.display();
-
-        if (dataToSend != "")
-        {
-            notifyClients(dataToSend);
-        }
     }
     else if (currentMode == 2)
     {
@@ -422,11 +418,11 @@ void loop()
         flex5Value = analogRead(flexSensor5Pin);
 
         // Determine finger states based on thresholds
-        fingerState1 = (flex1Value > threshold) ? 1 : 0;
-        fingerState2 = (flex2Value > threshold) ? 1 : 0;
-        fingerState3 = (flex3Value > threshold) ? 1 : 0;
-        fingerState4 = (flex4Value > threshold) ? 1 : 0;
-        fingerState5 = (flex5Value > threshold) ? 1 : 0;
+        fingerState1 = (flex1Value < threshold) ? 1 : 0;
+        fingerState2 = (flex2Value < threshold) ? 1 : 0;
+        fingerState3 = (flex3Value < threshold) ? 1 : 0;
+        fingerState4 = (flex4Value < threshold) ? 1 : 0;
+        fingerState5 = (flex5Value < threshold) ? 1 : 0;
 
         if (detectBye(calibratedGyroX, calibratedGyroY, calibratedGyroZ, calibratedAccelX, calibratedAccelY, calibratedAccelZ,
                       fingerState1, fingerState2, fingerState3, fingerState4, fingerState5))
@@ -499,6 +495,9 @@ void loop()
         {
             display.println("Thank you !!");
             dataToSend = "Thank you !!";
+        }else if(flex1Value == 1 && flex2Value == 1 && flex3Value == 0 && flex4Value == 1 && flex5Value == 1){
+            display.println("Fuck you");
+            dataToSend = "Fuck you";
         }
         else
         {

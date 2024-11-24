@@ -13,8 +13,8 @@
 #define SCREEN_I2C_ADDR 0x3C
 #define threshold 4000
 
-const char *ssid = "Hirusha";      // Replace with your WiFi SSID
-const char *password = "home3815"; // Replace with your WiFi password
+const char *ssid = "S23Hirusha";      // Replace with your WiFi SSID
+const char *password = "hirusha1212"; // Replace with your WiFi password
 
 // Define the analog input pins for the flex sensors
 const int flexSensor1Pin = 36; // GPIO36 (Analog Input for Flex Sensor 1)
@@ -316,177 +316,108 @@ void loop()
 
     if (currentMode == 1)
     {
-        // Mode 1: Tilt Directions
-        sensors_event_t a, g, temp;
-        mpu.getEvent(&a, &g, &temp);
-
-        // Read the values from the flex sensors (analog input)
-        flex1Value = analogRead(flexSensor1Pin);
-        flex2Value = analogRead(flexSensor2Pin);
-        flex3Value = analogRead(flexSensor3Pin);
-        flex4Value = analogRead(flexSensor4Pin);
-        flex5Value = analogRead(flexSensor5Pin);
-
         display.clearDisplay();
         display.setCursor(0, 0);
         display.setTextSize(2);
         display.setTextColor(SSD1306_WHITE);
-        display.println("Mode 1");
+        display.println("Mode 2");
 
-        if (a.acceleration.x > 5 && flex1Value < 800)
+        sensors_event_t a, g, temp;
+        mpu.getEvent(&a, &g, &temp);
+
+        // Calibrated gyro and accelerometer values with absolute value adjustment
+        float calibratedGyroX = abs(g.gyro.x - gyroXOffset);
+        float calibratedGyroY = abs(g.gyro.y - gyroYOffset);
+        float calibratedGyroZ = abs(g.gyro.z - gyroZOffset);
+        float calibratedAccelX = abs(a.acceleration.x - accelXOffset);
+        float calibratedAccelY = abs(a.acceleration.y - accelYOffset);
+        float calibratedAccelZ = abs(a.acceleration.z - accelZOffset);
+        float temperature = temp.temperature; // Temperature from MPU6050
+
+        // Read flex sensor values
+        flexValue1 = analogRead(flexPin1);
+        flexValue2 = analogRead(flexPin2);
+        flexValue3 = analogRead(flexPin3);
+        flexValue4 = analogRead(flexPin4);
+        flexValue5 = analogRead(flexPin5);
+
+        // Determine finger states based on thresholds
+        fingerState1 = (flexValue1 > threshold) ? 1 : 0;
+        fingerState2 = (flexValue2 > threshold) ? 1 : 0;
+        fingerState3 = (flexValue3 > threshold) ? 1 : 0;
+        fingerState4 = (flexValue4 > threshold) ? 1 : 0;
+        fingerState5 = (flexValue5 > threshold) ? 1 : 0;
+
+        if (fingerState3 == 0 && fingerState4 == 0 && fingerState1 == 0 && fingerState5 == 0 && fingerState2 == 0)
+            {
+                display.println("What is your name");
+                dataToSend = "What is your name";
+            }
+        else if (fingerState3 == 0 && fingerState4 == 0 && fingerState1 == 0 && fingerState5 == 0 && fingerState2 == 0)
         {
-            dataToSend = "Tilt Right 1st Flex";
-            display.println("Tilt Right 1st Flex");
+            display.println("Nice to meet you");
+            dataToSend = "Nice to meet you";
         }
-        else if (a.acceleration.x > 5 && flex2Value < 800)
+        else if (fingerState3 == 0 && fingerState4 == 0 && fingerState1 == 0 && fingerState5 == 0 && fingerState2 == 0)
         {
-            dataToSend = "Tilt Right 2nd Flex";
-            display.println("Tilt Right 2nd Flex");
+            display.println("Can you help me");
+            dataToSend = "Can you help me";
         }
-        else if (a.acceleration.x > 5 && flex3Value < 800)
+        else if (fingerState3 == 0 && fingerState4 == 0 && fingerState1 == 0 && fingerState5 == 0 && fingerState2 == 0)
         {
-            dataToSend = "Tilt Right 3rd Flex";
-            display.println("Tilt Right 3rd Flex");
+            display.println("Where is the bathroom");
+            dataToSend = "Where is the bathroom";
         }
-        else if (a.acceleration.x > 5 && flex4Value < 800)
+        else if (fingerState3 == 0 && fingerState4 == 0 && fingerState1 == 0 && fingerState5 == 0 && fingerState2 == 0)
         {
-            dataToSend = "Tilt Right 4th Flex";
-            display.println("Tilt Right 4th Flex");
+            display.println("I am hungry");
+            dataToSend = "I am hungry";
         }
-        else if (a.acceleration.x > 5 && flex5Value < 800)
+        else if (fingerState3 == 0 && fingerState4 == 0 && fingerState1 == 0 && fingerState5 == 0 && fingerState2 == 0)
         {
-            dataToSend = "Tilt Right 5th Flex";
-            display.println("Tilt Right 5th Flex");
+            display.println("I am thirsty");
+            dataToSend = "I am thirsty";
         }
-        else if (a.acceleration.x < -5 && flex1Value < 800)
+
+        else if(fingerState3 == 0 && fingerState4 == 0 && fingerState1 == 0 && fingerState5 == 0 && fingerState2 == 0)
         {
-            dataToSend = "Tilt Left 1st Flex";
-            display.println("Tilt Left 1st Flex");
+            dataToSend = "I am tired";
+            display.println("I am tired");
         }
-        else if (a.acceleration.x < -5 && flex2Value < 800)
+        else if(fingerState3 == 0 && fingerState4 == 0 && fingerState1 == 0 && fingerState5 == 0 && fingerState2 == 0)
         {
-            dataToSend = "Tilt Left 2nd Flex";
-            display.println("Tilt Left 2nd Flex");
+            dataToSend = "I do not understand";
+            display.println("I do not understand");
         }
-        else if (a.acceleration.x < -5 && flex3Value < 800)
+        else if(fingerState3 == 0 && fingerState4 == 0 && fingerState1 == 0 && fingerState5 == 0 && fingerState2 == 0)
         {
-            dataToSend = "Tilt Left 3rd Flex";
-            display.println("Tilt Left 3rd Flex");
+            dataToSend = "How much does this cost";
+            display.println("How much does this cost");
         }
-        else if (a.acceleration.x < -5 && flex4Value < 800)
+        else if(fingerState3 == 0 && fingerState4 == 0 && fingerState1 == 0 && fingerState5 == 0 && fingerState2 == 0)
         {
-            dataToSend = "Tilt Left 4th Flex";
-            display.println("Tilt Left 4th Flex");
+            dataToSend = "What time is it";
+            display.println("What time is it");
         }
-        else if (a.acceleration.x < -5 && flex5Value < 800)
+        else if(fingerState3 == 0 && fingerState4 == 0 && fingerState1 == 0 && fingerState5 == 0 && fingerState2 == 0)
         {
-            dataToSend = "Tilt Left 5th Flex";
-            display.println("Tilt Left 5th Flex");
+            dataToSend = "Where is this";
+            display.println("Where is this");
         }
-        else if (a.acceleration.y > 5 && flex1Value < 800)
+        else if(fingerState3 == 0 && fingerState4 == 1 && fingerState1 == 1 && fingerState5 == 1 && fingerState2 == 1)
         {
-            dataToSend = "Tilt Forward 1st Flex";
-            display.println("Tilt Forward 1st Flex");
+            dataToSend = "Fuck you";
+            display.println("Fuck you");
         }
-        else if (a.acceleration.y > 5 && flex2Value < 800)
+        else if(fingerState3 == 0 && fingerState4 == 1 && fingerState1 == 1 && fingerState5 == 1 && fingerState2 == 1)
         {
-            dataToSend = "Tilt Forward 2nd Flex";
-            display.println("Tilt Forward 2nd Flex");
+            dataToSend = "Good";
+            display.println("Good");
         }
-        else if (a.acceleration.y > 5 && flex3Value < 800)
+        else if(fingerState3 == 1 && fingerState4 == 1 && fingerState1 == 0 && fingerState5 == 1 && fingerState2 == 1 && calibratedGyroX )
         {
-            dataToSend = "Tilt Forward 3rd Flex";
-            display.println("Tilt Forward 3rd Flex");
-        }
-        else if (a.acceleration.y > 5 && flex4Value < 800)
-        {
-            dataToSend = "Tilt Forward 4th Flex";
-            display.println("Tilt Forward 4th Flex");
-        }
-        else if (a.acceleration.y > 5 && flex5Value < 800)
-        {
-            dataToSend = "Tilt Forward 5th Flex";
-            display.println("Tilt Forward 5th Flex");
-        }
-        else if (a.acceleration.y < -5 && flex1Value < 800)
-        {
-            dataToSend = "Tilt Backward 1st Flex";
-            display.println("Tilt Backward 1st Flex");
-        }
-        else if (a.acceleration.y < -5 && flex2Value < 800)
-        {
-            dataToSend = "Tilt Backward 2nd Flex";
-            display.println("Tilt Backward 2nd Flex");
-        }
-        else if (a.acceleration.y < -5 && flex3Value < 800)
-        {
-            dataToSend = "Tilt Backward 3rd Flex";
-            display.println("Tilt Backward 3rd Flex");
-        }
-        else if (a.acceleration.y < -5 && flex4Value < 800)
-        {
-            dataToSend = "Tilt Backward 4th Flex";
-            display.println("Tilt Backward 4th Flex");
-        }
-        else if (a.acceleration.y < -5 && flex5Value < 800)
-        {
-            dataToSend = "Tilt Backward 5th Flex";
-            display.println("Tilt Backward 5th Flex");
-        }
-        else if (a.acceleration.z > 9 && flex1Value < 800)
-        {
-            dataToSend = "Flat 1st Flex";
-            display.println("Flat 1st Flex");
-        }
-        else if (a.acceleration.z > 9 && flex2Value < 800)
-        {
-            dataToSend = "Flat 2nd Flex";
-            display.println("Flat 2nd Flex");
-        }
-        else if (a.acceleration.z > 9 && flex3Value < 800)
-        {
-            dataToSend = "Flat 3rd Flex";
-            display.println("Flat 3rd Flex");
-        }
-        else if (a.acceleration.z > 9 && flex4Value < 800)
-        {
-            dataToSend = "Flat 4th Flex";
-            display.println("Flat 4th Flex");
-        }
-        else if (a.acceleration.z > 9 && flex5Value < 800)
-        {
-            dataToSend = "Flat 5th Flex";
-            display.println("Flat 5th Flex");
-        }
-        else if (a.acceleration.z < -9 && flex1Value < 800)
-        {
-            dataToSend = "Upside Down 1st Flex";
-            display.println("Upside Down 1st Flex");
-        }
-        else if (a.acceleration.z < -9 && flex2Value < 800)
-        {
-            dataToSend = "Upside Down 2nd Flex";
-            display.println("Upside Down 2nd Flex");
-        }
-        else if (a.acceleration.z < -9 && flex3Value < 800)
-        {
-            dataToSend = "Upside Down 3rd Flex";
-            display.println("Upside Down 3rd Flex");
-        }
-        else if (a.acceleration.z < -9 && flex4Value < 800)
-        {
-            dataToSend = "Upside Down 4th Flex";
-            display.println("Upside Down 4th Flex");
-        }
-        else if (a.acceleration.z < -9 && flex5Value < 800)
-        {
-            dataToSend = "Upside Down 5th Flex";
-            display.println("Upside Down 5th Flex");
-        }
-        else
-        {
-            dataToSend = "Neutral";
-            display.println("Neutral");
+            dataToSend = "Bad";
+            display.println("Bad");
         }
         display.display();
 
