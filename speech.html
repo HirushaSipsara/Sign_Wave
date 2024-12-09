@@ -37,10 +37,12 @@
             "What is your name": "./mp3/What is your name.mp3",
             "What time is it": "./mp3/What time is it.mp3",
             "Where is the bathroom": "./mp3/Where is the bathroom.mp3",
+            "Good": "./mp3/Good.mp3",
+            "Bad": "./mp3/Bad.mp3"
         };
 
         let lastDirection = '';  // To store the last direction
-        const socket = new WebSocket('ws://192.168.221.195/ws'); // Replace with your ESP's IP
+        const socket = new WebSocket('ws://192.168.52.104/ws'); // Replace with your ESP's IP
 
         socket.onopen = function(event) {
             console.log('Connected to WebSocket server.');

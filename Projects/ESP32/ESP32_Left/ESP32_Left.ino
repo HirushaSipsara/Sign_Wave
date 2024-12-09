@@ -11,17 +11,17 @@
 #define SCREEN_HEIGHT 64
 #define OLED_RST_PIN 16 // Use GPIO 16 for the OLED reset pin (change if needed)
 #define SCREEN_I2C_ADDR 0x3C
-#define threshold 3000
+#define threshold 4095
 
-const char *ssid = "S23Hirusha";      // Replace with your WiFi SSID
-const char *password = "hirusha1212"; // Replace with your WiFi password
+const char *ssid = "Hirusha";      // Replace with your WiFi SSID
+const char *password = "home3815"; // Replace with your WiFi password
 
 // Define the analog input pins for the flex sensors
-const int flexSensor1Pin = 36; // GPIO36 (Analog Input for Flex Sensor 1)
-const int flexSensor2Pin = 39; // GPIO39 (Analog Input for Flex Sensor 2)
-const int flexSensor3Pin = 34; // GPIO34 (Analog Input for Flex Sensor 3)
-const int flexSensor4Pin = 35; // GPIO35 (Analog Input for Flex Sensor 4)
-const int flexSensor5Pin = 32; // GPIO32 (Analog Input for Flex Sensor 5)
+const int flexSensor2Pin = 36; // GPIO36 (Analog Input for Flex Sensor 1)
+const int flexSensor3Pin = 39; // GPIO39 (Analog Input for Flex Sensor 2)
+const int flexSensor4Pin = 34; // GPIO34 (Analog Input for Flex Sensor 3)
+const int flexSensor5Pin = 35; // GPIO35 (Analog Input for Flex Sensor 4)
+const int flexSensor1Pin = 32; // GPIO32 (Analog Input for Flex Sensor 5)
 
 Adafruit_MPU6050 mpu;
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RST_PIN);
@@ -329,9 +329,6 @@ void loop()
         display.setTextColor(SSD1306_WHITE);
         display.println("Mode 1");
 
-      
-
-
         // Read flex sensor values
         flex1Value = analogRead(flexSensor1Pin);
         flex2Value = analogRead(flexSensor2Pin);
@@ -340,25 +337,25 @@ void loop()
         flex5Value = analogRead(flexSensor5Pin);
 
           Serial.print("Finger 1: "); Serial.print(flex1Value);
-  Serial.print(" | Finger 2: "); Serial.print(flex2Value);
-  Serial.print(" | Finger 3: "); Serial.print(flex3Value);
-  Serial.print(" | Finger 4: "); Serial.print(flex4Value);
-  Serial.print(" | Finger 5: "); Serial.println(flex5Value);
+          Serial.print(" | Finger 2: "); Serial.print(flex2Value);
+          Serial.print(" | Finger 3: "); Serial.print(flex3Value);
+          Serial.print(" | Finger 4: "); Serial.print(flex4Value);
+          Serial.print(" | Finger 5: "); Serial.println(flex5Value);
 
         // Determine finger states based on thresholds
-        fingerState1 = (flex1Value < threshold) ? 1 : 0;
-        fingerState2 = (flex2Value < threshold) ? 1 : 0;
-        fingerState3 = (flex3Value < threshold) ? 1 : 0;
-        fingerState4 = (flex4Value < threshold) ? 1 : 0;
-        fingerState5 = (flex5Value < threshold) ? 1 : 0;
+        fingerState1 = (flex1Value > 4096) ? 1 : 0;
+        fingerState2 = (flex2Value > 2000) ? 1 : 0;
+        fingerState3 = (flex3Value > 3500) ? 1 : 0;
+        fingerState4 = (flex4Value > 2000) ? 1 : 0;
+        fingerState5 = (flex5Value > 1500) ? 1 : 0;
 
         if (a.acceleration.x > 5 && fingerState1 == 0 && fingerState2 == 1 && fingerState3 == 1 && fingerState4 == 1 && fingerState5 == 1) {
-          dataToSend = "Good";
-          display.println("Good");
-        } else if (a.acceleration.x < -5 && fingerState1 == 0 && fingerState2 == 1 && fingerState3 == 1 && fingerState4 == 1 && fingerState5 == 1) {
           dataToSend = "Bad";
           display.println("Bad");
-        } else if (a.acceleration.y > 5 && fingerState1 == 0 && fingerState2 == 0 && fingerState3 == 0 && fingerState4 == 1 && fingerState5 == 0) {
+        } else if (a.acceleration.x > -5 && fingerState1 == 0 && fingerState2 == 1 && fingerState3 == 1 && fingerState4 == 1 && fingerState5 == 1) {
+          dataToSend = "Good";
+          display.println("Good");
+        } else if (a.acceleration.y > 5 && fingerState1 == 0 && fingerState2 == 0 && fingerState3 == 0 && fingerState4 == 1 && fingerState5 == 1) {
           dataToSend = "I do not understand";
           display.println("I do not understand");
         } else if (a.acceleration.y > 5 && fingerState1 == 0 && fingerState2 == 0 && fingerState3 == 0 && fingerState4 == 0 && fingerState5 == 0) {
@@ -427,11 +424,11 @@ void loop()
         flex5Value = analogRead(flexSensor5Pin);
 
         // Determine finger states based on thresholds
-        fingerState1 = (flex1Value < threshold) ? 1 : 0;
-        fingerState2 = (flex2Value < threshold) ? 1 : 0;
-        fingerState3 = (flex3Value < threshold) ? 1 : 0;
-        fingerState4 = (flex4Value < threshold) ? 1 : 0;
-        fingerState5 = (flex5Value < threshold) ? 1 : 0;
+        fingerState1 = (flex1Value > 4096) ? 1 : 0;
+        fingerState2 = (flex2Value > 2000) ? 1 : 0;
+        fingerState3 = (flex3Value > 3500) ? 1 : 0;
+        fingerState4 = (flex4Value > 2000) ? 1 : 0;
+        fingerState5 = (flex5Value > 1500) ? 1 : 0;
 
         if (detectBye(calibratedGyroX, calibratedGyroY, calibratedGyroZ, calibratedAccelX, calibratedAccelY, calibratedAccelZ,
                       fingerState1, fingerState2, fingerState3, fingerState4, fingerState5))

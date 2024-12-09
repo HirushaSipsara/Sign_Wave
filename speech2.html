@@ -29,7 +29,7 @@
         const audioFiles = {
             "Good bye": "./mp3/Gestures/Good bye.mp3",
             "Hello": "./mp3/Gestures/Hello.mp3",
-            "I am": "./mp3/Fuck you.mp3",
+            "I am": "./mp3/Gestures/I am.mp3",
             "I": "./mp3/Gestures/I.mp3",
             "Need": "./mp3/Gestures/Need.mp3",
             "No": "./mp3/Gestures/No.mp3",
@@ -43,7 +43,7 @@
         };
 
         let lastDirection = '';  // To store the last direction
-        const socket = new WebSocket('ws://192.168.221.195/ws'); // Replace with your ESP's IP
+        const socket = new WebSocket('ws://192.168.52.104/ws'); // Replace with your ESP's IP
 
         socket.onopen = function(event) {
             console.log('Connected to WebSocket server.');

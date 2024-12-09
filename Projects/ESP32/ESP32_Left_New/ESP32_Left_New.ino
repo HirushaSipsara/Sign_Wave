@@ -1,4 +1,5 @@
 #include <WiFi.h>
+#include <SPI.h>
 #include <Adafruit_MPU6050.h>
 #include <Adafruit_Sensor.h>
 #include <Wire.h>
@@ -7,24 +8,33 @@
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
 
-#define SCREEN_WIDTH 128
-#define SCREEN_HEIGHT 64
-#define OLED_RST_PIN 16 // Use GPIO 16 for the OLED reset pin (change if needed)
-#define SCREEN_I2C_ADDR 0x3C
-#define threshold 4000
+// Define OLED pins for SPI
+#define SCREEN_WIDTH 128 // OLED display width, in pixels
+#define SCREEN_HEIGHT 64 // OLED display height, in pixels
+#define OLED_RESET -1    // Reset pin (or -1 if not used)
+
+// Pin Definitions
+#define OLED_CS 5    // Chip select pin (GPIO5)
+#define OLED_DC 27   // Data/Command pin (GPIO21)
+#define OLED_RST 26  // Reset pin (GPIO22)
+#define OLED_CLK 18  // Clock pin (SCK, GPIO18)
+#define OLED_MISO 23 // Data pin (MOSI, GPIO23)
+
+#define threshold 4095
 
 const char *ssid = "S23Hirusha";      // Replace with your WiFi SSID
 const char *password = "hirusha1212"; // Replace with your WiFi password
 
 // Define the analog input pins for the flex sensors
-const int flexSensor1Pin = 36; // GPIO36 (Analog Input for Flex Sensor 1)
-const int flexSensor2Pin = 39; // GPIO39 (Analog Input for Flex Sensor 2)
-const int flexSensor3Pin = 34; // GPIO34 (Analog Input for Flex Sensor 3)
-const int flexSensor4Pin = 35; // GPIO35 (Analog Input for Flex Sensor 4)
-const int flexSensor5Pin = 32; // GPIO32 (Analog Input for Flex Sensor 5)
+const int flexSensor2Pin = 36; // GPIO36 (Analog Input for Flex Sensor 1)
+const int flexSensor3Pin = 39; // GPIO39 (Analog Input for Flex Sensor 2)
+const int flexSensor4Pin = 34; // GPIO34 (Analog Input for Flex Sensor 3)
+const int flexSensor5Pin = 35; // GPIO35 (Analog Input for Flex Sensor 4)
+const int flexSensor1Pin = 32; // GPIO32 (Analog Input for Flex Sensor 5)
 
 Adafruit_MPU6050 mpu;
-Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RST_PIN);
+// Create OLED display object using SPI
+Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &SPI, OLED_DC, OLED_RST, OLED_CS);
 
 AsyncWebServer server(80);
 AsyncWebSocket ws("/ws");
@@ -72,12 +82,11 @@ bool detectHello(float calibratedGyroX, float calibratedGyroY, float calibratedG
                  int fingerState1, int fingerState2, int fingerState3, int fingerState4, int fingerState5)
 {
 
-  return ((calibratedGyroX > 0 && calibratedGyroX < 3) &&
-          (calibratedGyroY > 0 && calibratedGyroY < 3) &&
-          (calibratedGyroZ > 0 || calibratedGyroZ < ) &&
-          (calibratedAccelX > 3.0 && calibratedAccelX < 10.0) &&
-          (calibratedAccelY > 0.0 && calibratedAccelY < 10.0) &&
-          (calibratedAccelZ > 0.0 && calibratedAccelZ < 7.0) &&
+  return ((calibratedGyroX > 0 && calibratedGyroX < 10) &&
+          (calibratedGyroY > 0 && calibratedGyroY < 5) &&
+          (calibratedGyroZ > 0 || calibratedGyroZ < 0) &&
+          (calibratedAccelX > 0.0 && calibratedAccelX < 0.5) &&
+          (calibratedAccelY > 8.0 && calibratedAccelY < 10.0) &&
           fingerState2 == 0 && fingerState3 == 0 && fingerState4 == 0 && fingerState5 == 0 && fingerState1 == 0);
 }
 bool detectIam(float calibratedGyroX, float calibratedGyroY, float calibratedGyroZ,
@@ -85,12 +94,12 @@ bool detectIam(float calibratedGyroX, float calibratedGyroY, float calibratedGyr
                int fingerState1, int fingerState2, int fingerState3, int fingerState4, int fingerState5)
 {
 
-  return ((calibratedGyroX > 0 && calibratedGyroX < 3.5) &&
-          (calibratedGyroY > 0 && calibratedGyroY < 2) &&
-          (calibratedGyroZ > 0 && calibratedGyroZ < 1.5) &&
-          (calibratedAccelX > 0.0 && calibratedAccelX < 2.5) &&
-          (calibratedAccelY > 0.0 && calibratedAccelY < 3.5) &&
-          (calibratedAccelZ > 0.0 && calibratedAccelZ < 5.5) &&
+  return ((calibratedGyroX > 0 && calibratedGyroX < 10) &&
+          (calibratedGyroY > 0 && calibratedGyroY < 5) &&
+          (calibratedGyroZ > 0) &&
+          (calibratedAccelX > 0.0 && calibratedAccelX < 5.5) &&
+          (calibratedAccelY > 0.0 && calibratedAccelY < 5.0) &&
+          (calibratedAccelZ > 10.0 && calibratedAccelZ < 30.0) &&
           fingerState2 == 0 && fingerState3 == 0 && fingerState4 == 0 && fingerState5 == 0 && fingerState1 == 0);
 }
 bool detectPlease(float calibratedGyroX, float calibratedGyroY, float calibratedGyroZ,
@@ -98,12 +107,12 @@ bool detectPlease(float calibratedGyroX, float calibratedGyroY, float calibrated
                   int fingerState1, int fingerState2, int fingerState3, int fingerState4, int fingerState5)
 {
 
-  return ((calibratedGyroX > 0 && calibratedGyroX < 3) &&
-          (calibratedGyroY > 0 && calibratedGyroY < 1.5) &&
-          (calibratedGyroZ > 0 && calibratedGyroZ < 1.5) &&
-          (calibratedAccelX > 0.0 && calibratedAccelX < 4.0) &&
-          (calibratedAccelY > 0.0 && calibratedAccelY < 7.0) &&
-          (calibratedAccelZ > 0.0 && calibratedAccelZ < 6.0) &&
+  return ((calibratedGyroX > 0 && calibratedGyroX < 5) &&
+          (calibratedGyroY > 0 && calibratedGyroY < 2) &&
+          (calibratedGyroZ > 0 && calibratedGyroZ < 10) &&
+          (calibratedAccelX > 8.0 && calibratedAccelX < 15.5) &&
+          (calibratedAccelY > 0.0 && calibratedAccelY < 5.0) &&
+          (calibratedAccelZ > 8.0 && calibratedAccelZ < 15.0) &&
           fingerState2 == 0 && fingerState3 == 0 && fingerState4 == 0 && fingerState5 == 0 && fingerState1 == 0);
 }
 bool detectYes(float calibratedGyroX, float calibratedGyroY, float calibratedGyroZ,
@@ -111,12 +120,12 @@ bool detectYes(float calibratedGyroX, float calibratedGyroY, float calibratedGyr
                int fingerState1, int fingerState2, int fingerState3, int fingerState4, int fingerState5)
 {
 
-  return ((calibratedGyroX > 0 && calibratedGyroX < 5) &&
-          (calibratedGyroY > 0 && calibratedGyroY < 2) &&
-          (calibratedGyroZ > 0 && calibratedGyroZ < 5) &&
-          (calibratedAccelX > 0.0 && calibratedAccelX < 5.0) &&
-          (calibratedAccelY > 0.0 && calibratedAccelY < 5.0) &&
-          (calibratedAccelZ > 0.0 && calibratedAccelZ < 3.0) &&
+  return ((calibratedGyroX > 0 && calibratedGyroX < 1) &&
+          (calibratedGyroY > 0 && calibratedGyroY < 1) &&
+          (calibratedGyroZ > 0 && calibratedGyroZ < 1) &&
+          (calibratedAccelX > 0.0 && calibratedAccelX < 2.5) &&
+          (calibratedAccelY > 0.0 && calibratedAccelY < 2.0) &&
+          (calibratedAccelZ > 0.0 && calibratedAccelZ < 5.0) &&
           fingerState3 == 1 && fingerState4 == 1 && fingerState2 == 1 && fingerState1 == 1 && fingerState5 == 1);
 }
 bool detectNo(float calibratedGyroX, float calibratedGyroY, float calibratedGyroZ,
@@ -214,19 +223,27 @@ bool detectThankyou(float calibratedGyroX, float calibratedGyroY, float calibrat
 void setup()
 {
   Serial.begin(115200);
-  Wire.begin();
+  // Initialize SPI
+  SPI.begin(OLED_CLK, OLED_MISO, -1, -1); // Use GPIO18 for clock, GPIO23 for MOSI (MISO is not used)
 
-  // OLED setup
-  if (!display.begin(SSD1306_SWITCHCAPVCC, SCREEN_I2C_ADDR))
+  // Initialize the display
+  if (!display.begin(SSD1306_SWITCHCAPVCC, OLED_CS))
   {
     Serial.println(F("SSD1306 allocation failed"));
     for (;;)
-      ;
+      ; // Infinite loop if the OLED initialization fails
   }
+
+    // Set display rotation to landscape mode (flipped)
+  display.setRotation(2);  // You can try 1, 2, or 3 depending on how you want the orientation
+
+  // Clear the display buffer
   display.clearDisplay();
-  display.setTextSize(2);
+
+  // Set text size and color
+  display.setTextSize(1);
   display.setTextColor(SSD1306_WHITE);
-  display.display();
+  display.setCursor(0, 0);
 
   // MPU6050 setup
   if (!mpu.begin())
@@ -268,6 +285,8 @@ void setup()
 
   // Start server
   server.begin();
+  display.println(F("Hello, World!"));
+  display.display(); 
 }
 
 // Calibrate the sensor method
@@ -317,7 +336,7 @@ void loop()
 
   if (currentMode == 0)
   {
-    Serial.print("ESP32 Off");
+    Serial.print("ESP32 Off\n");
   }
   else if (currentMode == 1)
   {
@@ -328,7 +347,7 @@ void loop()
     display.setCursor(0, 0);
     display.setTextSize(2);
     display.setTextColor(SSD1306_WHITE);
-    display.println("Mode 1");
+    display.println(F("Mode 1"));
 
     // Read flex sensor values
     flex1Value = analogRead(flexSensor1Pin);
@@ -337,83 +356,88 @@ void loop()
     flex4Value = analogRead(flexSensor4Pin);
     flex5Value = analogRead(flexSensor5Pin);
 
+    Serial.print("Finger 1: ");
+    Serial.print(flex1Value);
+    Serial.print(" | Finger 2: ");
+    Serial.print(flex2Value);
+    Serial.print(" | Finger 3: ");
+    Serial.print(flex3Value);
+    Serial.print(" | Finger 4: ");
+    Serial.print(flex4Value);
+    Serial.print(" | Finger 5: ");
+    Serial.println(flex5Value);
+
     // Determine finger states based on thresholds
-    fingerState1 = (flex1Value < threshold) ? 1 : 0;
-    fingerState2 = (flex2Value < threshold) ? 1 : 0;
-    fingerState3 = (flex3Value < threshold) ? 1 : 0;
-    fingerState4 = (flex4Value < threshold) ? 1 : 0;
-    fingerState5 = (flex5Value < threshold) ? 1 : 0;
+    fingerState1 = (flex1Value > 4096) ? 1 : 0;
+    fingerState2 = (flex2Value > 2000) ? 1 : 0;
+    fingerState3 = (flex3Value > 3500) ? 1 : 0;
+    fingerState4 = (flex4Value > 2000) ? 1 : 0;
+    fingerState5 = (flex5Value > 1500) ? 1 : 0;
 
     if (a.acceleration.x > 5 && fingerState1 == 0 && fingerState2 == 1 && fingerState3 == 1 && fingerState4 == 1 && fingerState5 == 1)
     {
-      dataToSend = "Good";
-      display.println("Good");
-    }
-    else if (a.acceleration.x < -5 && fingerState1 == 0 && fingerState2 == 1 && fingerState3 == 1 && fingerState4 == 1 && fingerState5 == 1)
-    {
       dataToSend = "Bad";
-      display.println("Bad");
+      display.println(F("Bad"));
+    }
+    else if (a.acceleration.x > -5 && fingerState1 == 0 && fingerState2 == 1 && fingerState3 == 1 && fingerState4 == 1 && fingerState5 == 1)
+    {
+      dataToSend = "Good";
+      display.println(F("Good"));
     }
     else if (a.acceleration.y > 5 && fingerState1 == 0 && fingerState2 == 0 && fingerState3 == 0 && fingerState4 == 1 && fingerState5 == 0)
     {
       dataToSend = "I do not understand";
-      display.println("I do not understand");
+      display.println(F("I do not understand"));
     }
     else if (a.acceleration.y > 5 && fingerState1 == 0 && fingerState2 == 0 && fingerState3 == 0 && fingerState4 == 0 && fingerState5 == 0)
     {
       dataToSend = "Where is the bathroom";
-      display.println("Where is the bathroom");
+      display.println(F("Where is the bathroom"));
     }
     else if (a.acceleration.y < -5 && fingerState1 == 0 && fingerState2 == 0 && fingerState3 == 0 && fingerState4 == 1 && fingerState5 == 1)
     {
       dataToSend = "Nice to meet you";
-      display.println("Nice to meet you");
+      display.println(F("Nice to meet you"));
     }
     else if (a.acceleration.y < -5 && fingerState1 == 0 && fingerState2 == 0 && fingerState3 == 1 && fingerState4 == 1 && fingerState5 == 1)
     {
       dataToSend = "What time is it";
-      display.println("What time is it");
+      display.println(F("What time is it"));
     }
     else if (a.acceleration.z > 9 && fingerState1 == 0 && fingerState2 == 0 && fingerState3 == 1 && fingerState4 == 1 && fingerState5 == 1)
     {
       dataToSend = "How much does this cost";
-      display.println("How much does this cost");
+      display.println(F("How much does this cost"));
     }
     else if (a.acceleration.z < -9 && fingerState1 == 0 && fingerState2 == 0 && fingerState3 == 1 && fingerState4 == 1 && fingerState5 == 1)
     {
       dataToSend = "Can you help me";
-      display.println("Can you help me");
+      display.println(F("Can you help me"));
     }
     else if (a.acceleration.z < -9 && fingerState1 == 0 && fingerState2 == 0 && fingerState3 == 0 && fingerState4 == 1 && fingerState5 == 1)
     {
       dataToSend = "What is your name";
-      display.println("What is your name");
+      display.println(F("What is your name"));
     }
     else if (a.acceleration.z > 9 && fingerState1 == 1 && fingerState2 == 0 && fingerState3 == 0 && fingerState4 == 1 && fingerState5 == 1)
     {
       dataToSend = "I am hungry";
-      display.println("I am hungry");
+      display.println(F("I am hungry"));
     }
     else if (a.acceleration.z < -9 && fingerState1 == 1 && fingerState2 == 0 && fingerState3 == 0 && fingerState4 == 1 && fingerState5 == 1)
     {
       dataToSend = "I am thirsty";
-      display.println("I am thirsty");
+      display.println(F("I am thirsty"));
     }
     else if (a.acceleration.y < -5 && fingerState1 == 1 && fingerState2 == 0 && fingerState3 == 0 && fingerState4 == 1 && fingerState5 == 1)
     {
       dataToSend = "I am tired";
-      display.println("I am tired");
+      display.println(F("I am tired"));
     }
     else if (fingerState1 == 1 && fingerState2 == 1 && fingerState3 == 0 && fingerState4 == 1 && fingerState5 == 1)
     {
       dataToSend = "Fuck you";
-      display.println("Fuck you");
-    }
-    display.display();
-
-    if (dataToSend != "")
-    {
-      notifyClients(dataToSend);
+      display.println(F("Fuck you"));
     }
     display.display();
 
@@ -429,7 +453,7 @@ void loop()
     display.setCursor(0, 0);
     display.setTextSize(2);
     display.setTextColor(SSD1306_WHITE);
-    display.println("Mode 2");
+    display.println(F("Mode 2"));
 
     sensors_event_t a, g, temp;
     mpu.getEvent(&a, &g, &temp);
@@ -451,93 +475,111 @@ void loop()
     flex5Value = analogRead(flexSensor5Pin);
 
     // Determine finger states based on thresholds
-    fingerState1 = (flex1Value > threshold) ? 1 : 0;
-    fingerState2 = (flex2Value > threshold) ? 1 : 0;
-    fingerState3 = (flex3Value > threshold) ? 1 : 0;
-    fingerState4 = (flex4Value > threshold) ? 1 : 0;
-    fingerState5 = (flex5Value > threshold) ? 1 : 0;
+    fingerState1 = (flex1Value > 4096) ? 1 : 0;
+    fingerState2 = (flex2Value > 2000) ? 1 : 0;
+    fingerState3 = (flex3Value > 3500) ? 1 : 0;
+    fingerState4 = (flex4Value > 2000) ? 1 : 0;
+    fingerState5 = (flex5Value > 1500) ? 1 : 0;
 
     if (detectBye(calibratedGyroX, calibratedGyroY, calibratedGyroZ, calibratedAccelX, calibratedAccelY, calibratedAccelZ,
                   fingerState1, fingerState2, fingerState3, fingerState4, fingerState5))
     {
-      display.println("Good Bye !!!");
+      display.println(F("Good Bye !!!"));
       dataToSend = "Good Bye";
     }
     else if (detectHello(calibratedGyroX, calibratedGyroY, calibratedGyroZ, calibratedAccelX, calibratedAccelY, calibratedAccelZ,
                          fingerState1, fingerState2, fingerState3, fingerState4, fingerState5))
     {
-      display.println("Hello !!!");
+      display.println(F("Hello !!!"));
       dataToSend = "Hello";
     }
     else if (detectIam(calibratedGyroX, calibratedGyroY, calibratedGyroZ, calibratedAccelX, calibratedAccelY, calibratedAccelZ,
                        fingerState1, fingerState2, fingerState3, fingerState4, fingerState5))
     {
-      display.println("I am");
+      display.println(F("I am"));
       dataToSend = "I am";
     }
     else if (detectPlease(calibratedGyroX, calibratedGyroY, calibratedGyroZ, calibratedAccelX, calibratedAccelY, calibratedAccelZ,
                           fingerState1, fingerState2, fingerState3, fingerState4, fingerState5))
     {
-      display.println("Please..");
+      display.println(F("Please.."));
       dataToSend = "Please..";
     }
     else if (detectYes(calibratedGyroX, calibratedGyroY, calibratedGyroZ, calibratedAccelX, calibratedAccelY, calibratedAccelZ,
                        fingerState1, fingerState2, fingerState3, fingerState4, fingerState5))
     {
-      display.println("Yes");
+      display.println(F("Yes"));
       dataToSend = "Yes";
     }
     else if (detectNo(calibratedGyroX, calibratedGyroY, calibratedGyroZ, calibratedAccelX, calibratedAccelY, calibratedAccelZ,
                       fingerState1, fingerState2, fingerState3, fingerState4, fingerState5))
     {
-      display.println("No");
+      display.println(F("No"));
       dataToSend = "No";
     }
     else if (detectSorry(calibratedGyroX, calibratedGyroY, calibratedGyroZ, calibratedAccelX, calibratedAccelY, calibratedAccelZ,
                          fingerState1, fingerState2, fingerState3, fingerState4, fingerState5))
     {
-      display.println("Sorry..");
+      display.println(F("Sorry.."));
       dataToSend = "Sorry";
     }
     else if (detectWater(calibratedGyroX, calibratedGyroY, calibratedGyroZ, calibratedAccelX, calibratedAccelY, calibratedAccelZ,
                          fingerState1, fingerState2, fingerState3, fingerState4, fingerState5))
     {
-      display.println("Water");
+      display.println(F("Water"));
       dataToSend = "Water";
     }
     else if (detectThirsty(calibratedGyroX, calibratedGyroY, calibratedGyroZ, calibratedAccelX, calibratedAccelY, calibratedAccelZ,
                            fingerState1, fingerState2, fingerState3, fingerState4, fingerState5))
     {
-      display.println("Thirsty");
+      display.println(F("Thirsty"));
       dataToSend = "Thirsty";
     }
     else if (detectI(calibratedGyroX, calibratedGyroY, calibratedGyroZ, calibratedAccelX, calibratedAccelY, calibratedAccelZ,
                      fingerState1, fingerState2, fingerState3, fingerState4, fingerState5))
     {
-      display.println("I");
+      display.println(F("I"));
       dataToSend = "I";
     }
     else if (detectNeed(calibratedGyroX, calibratedGyroY, calibratedGyroZ, calibratedAccelX, calibratedAccelY, calibratedAccelZ,
                         fingerState1, fingerState2, fingerState3, fingerState4, fingerState5))
     {
-      display.println("Need");
+      display.println(F("Need"));
       dataToSend = "Need";
     }
     else if (detectThankyou(calibratedGyroX, calibratedGyroY, calibratedGyroZ, calibratedAccelX, calibratedAccelY, calibratedAccelZ,
                             fingerState1, fingerState2, fingerState3, fingerState4, fingerState5))
     {
-      display.println("Thank you !!");
+      display.println(F("Thank you !!"));
       dataToSend = "Thank you !!";
+    }
+    else if (flex1Value == 1 && flex2Value == 1 && flex3Value == 0 && flex4Value == 1 && flex5Value == 1)
+    {
+      display.println(F("Fuck you"));
+      dataToSend = "Fuck you";
     }
     else
     {
-      display.println("");
+      display.println(F(""));
     }
     display.display();
     if (dataToSend != "")
     {
       notifyClients(dataToSend);
     }
+      // Serial output (Gyro, Accel, Temp, Flex values for debugging)
+  Serial.print("Gyro X: "); Serial.print(calibratedGyroX);
+  Serial.print(" | Gyro Y: "); Serial.print(calibratedGyroY);
+  Serial.print(" | Gyro Z: "); Serial.print(calibratedGyroZ);
+  Serial.print(" | Accel X: "); Serial.print(calibratedAccelX);
+  Serial.print(" | Accel Y: "); Serial.print(calibratedAccelY);
+  Serial.print(" | Accel Z: "); Serial.print(calibratedAccelZ);
+  Serial.print(" | Temp: "); Serial.println(temperature);
+  Serial.print("Finger 1: "); Serial.print(flex1Value);
+  Serial.print(" | Finger 2: "); Serial.print(flex2Value);
+  Serial.print(" | Finger 3: "); Serial.print(flex3Value);
+  Serial.print(" | Finger 4: "); Serial.print(flex4Value);
+  Serial.print(" | Finger 5: "); Serial.println(flex5Value);
   }
 
   delay(100);
