@@ -26,7 +26,6 @@
     </style>
     <script>
         const audioFiles = {
-            "Fuck you": "./mp3/Fuck you.mp3",
             "Can you help me": "./mp3/Can you help me.mp3",
             "How much does this cost": "./mp3/How much does this cost.mp3",
             "I am hungry": "./mp3/I am hungry.mp3",
@@ -42,7 +41,7 @@
         };
 
         let lastDirection = '';  // To store the last direction
-        const socket = new WebSocket('ws://192.168.52.104/ws'); // Replace with your ESP's IP
+        const socket = new WebSocket('ws://192.168.140.104/ws'); // Replace with your ESP's IP
 
         socket.onopen = function(event) {
             console.log('Connected to WebSocket server.');
@@ -389,7 +388,7 @@
     <script>
       // Simulate direction change for testing
       function simulateDirectionChange() {
-         const directions = ["Where is the bathroom", "What time is it", "What is your name", "Nice to meet you", "I do not understand", "I am tired", "I am thirsty", "I am hungry", "How much does this cost", "Can you help me", "Fuck you"];
+         const directions = ["Where is the bathroom", "What time is it", "What is your name", "Nice to meet you", "I do not understand", "I am tired", "I am thirsty", "I am hungry", "How much does this cost", "Can you help me"];
          const randomDirection = directions[Math.floor(Math.random() * directions.length)];
          if (randomDirection !== lastDirection) {
              updateDirection(randomDirection);
